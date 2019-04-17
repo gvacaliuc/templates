@@ -1,0 +1,27 @@
+\begin{algorithm}[h]
+\caption{ \textbf{GenerateNewickStrings} }
+\label{alg:comp_nni_neigh}
+\begin{algorithmic}[5]
+
+    \REQUIRE Set $X$ of Taxa names.
+
+    \ENSURE The set of all Newick Strings possible with Set $X$.
+
+    
+    \IF{$|X| = 2$}
+        \RETURN $\{(A,B)| A,B \in X, A \neq B\}$
+    \ENDIF
+
+    \IF{$|X| = 1$}
+        \RETURN $X$ 
+    \ENDIF
+
+    \STATE $fullset \leftarrow \{((A,B),C),(A,(B,C)),(C,C)| A,B \in X, C \in
+                                    \textbf{GenerateNewickStrings}(X \setminus \{A,B\}) \}$
+
+
+    \RETURN $fullset$
+
+\end{algorithmic}
+\end{algorithm}
+

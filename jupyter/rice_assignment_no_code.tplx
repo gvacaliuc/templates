@@ -1,0 +1,243 @@
+((*- extends 'style_ipython.tplx' -*))
+
+((* block docclass *))
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+((* endblock docclass *))
+
+%===============================================================================
+% PACKAGES
+%===============================================================================
+
+((* block packages *))
+
+% Document Style Packages
+  \usepackage[english]{babel} % English language/hyphenation
+  \usepackage{sectsty} % Allows customizing section commands
+
+  % Make all sections centered, the default font and small caps 
+  \allsectionsfont{\centering \normalfont\scshape} 
+  \usepackage{fancyhdr} % Custom headers and footers
+  \usepackage{layout}
+  \usepackage{placeins}
+
+  \usepackage{enumerate} % Needed for markdown enumerations to work
+  \usepackage{geometry} % Used to adjust the document margins
+  \usepackage{textcomp} % defines textquotesingle
+  \usepackage{xcolor} % Allow colors to be defined
+  \usepackage{fancyvrb} % verbatim replacement
+  \usepackage{longtable} % longtable support required by pandoc >1.10
+  \usepackage{booktabs}  % table support for pandoc > 1.12.2
+  \usepackage[inline]{enumitem} % IRkernel/repr support (
+                                % it uses the enumerate* environment)
+  \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                              % normalem makes italics be italics, not underlines
+
+% Math 
+  \usepackage{amsfonts} % Math packages
+  \usepackage{amsmath} % Equations
+  \usepackage{amssymb} % Equations
+
+% Figures
+  % Basic figure setup, for now with no caption control since it's done
+  % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+  \usepackage{graphicx}
+
+  % We will generate all images so they have a width \maxwidth. This means
+  % that they will get their normal width if they fit onto the page, but
+  % are scaled down if they would overflow the margins.
+  \makeatletter
+  \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+  \else\Gin@nat@width\fi}
+  \makeatother
+  \let\Oldincludegraphics\includegraphics
+  % Set max figure width to be 80% of text width, for now hardcoded.
+  \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+
+  % Ensure that by default, figures have no caption (until we provide a
+  % proper Figure object with a Caption API and a way to capture that
+  % in the conversion process - todo).
+  \usepackage{caption}
+  \DeclareCaptionLabelFormat{nolabel}{}
+  \captionsetup{labelformat=nolabel}
+
+  \usepackage{adjustbox} % Used to constrain images to a maximum size 
+
+  \usepackage{grffile} % extends the file name processing of package graphics 
+                       % to support a larger range 
+
+% Code Cells
+  \usepackage{minted}
+  \usepackage{mdframed}
+
+% Misc ----
+% Hack from http://tex.stackexchange.com/a/47451/13684:
+\AtBeginDocument{%
+    \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+}
+
+% Character format
+\usepackage{upquote} % Upright quotes for verbatim code
+\usepackage{eurosym} % defines \euro
+\usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+\usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+
+% The hyperref package gives us a pdf with properly built
+% internal navigation ('pdf bookmarks' for the table of contents,
+% internal cross-reference links, web links for URLs, etc.)
+\usepackage{hyperref}
+
+((* endblock packages *))
+
+
+%===============================================================================
+% DEFINITIONS
+%==============================================================================
+
+((* block definitions *))
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+% Colors for the hyperref package
+\definecolor{urlcolor}{rgb}{0,.145,.698}
+\definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+\definecolor{citecolor}{rgb}{.12,.54,.11}
+
+% Colors for minted package
+\definecolor{codecellbg}{rgb}{0.950,0.950,0.950}
+\definecolor{riceblue}{rgb}{0.000,0.141,0.416}
+\definecolor{ricegray}{rgb}{0.369,0.376,0.384}
+
+\mdfdefinestyle{inputcell}{%
+ hidealllines=true,leftline=true,
+ skipabove=12pt,skipbelow=0pt,
+ innertopmargin=0.4em,%
+ innerbottommargin=0.4em,%
+ innerrightmargin=0.5em,%
+ rightmargin=0.5em,%
+ innerleftmargin=0.5em,%
+ leftmargin=0.5em,%
+ linecolor=riceblue,linewidth=3pt,%
+ backgroundcolor=codecellbg,%
+}
+((* endblock definitions *))
+
+
+%==============================================================================
+% Commands
+%==============================================================================
+    
+((* block commands *))
+
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{\thepage} % Page numbering for footer
+\fancyfoot[R]{} % Empty 
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\setlength\parindent{4pt}
+\setlength{\parskip}{1em}
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command 
+                                                % with 1 argument of height
+\newcommand{\fancyline}{\\ \horrule{0.5pt} \vspace{0.1cm}} % fancy line to put
+                                                           % under questions
+
+% Needed from Pandoc Template
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% sets up the minted styles, for now hardcodes python.
+\setminted{mathescape,
+           numbersep=5pt,
+           autogobble=true,
+           breaklines,
+           framesep=2mm}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[style=inputcell]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+% Prevent overflowing lines due to hard-to-break entities
+\sloppy 
+% Setup hyperref package
+\hypersetup{
+  breaklinks=true,  % so long urls are correctly broken across lines
+  colorlinks=true,
+  urlcolor=urlcolor,
+  linkcolor=linkcolor,
+  citecolor=citecolor,
+}
+
+  %============================================================================
+  % MARGINS
+  %============================================================================
+
+  ((* block margins *))
+  \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+  ((* endblock margins *))
+
+((* endblock commands *))
+
+
+%===============================================================================
+% TITLE SETUP
+%===============================================================================
+
+% Author and Title from metadata
+((* block maketitle *))
+
+\author{Gabriel Vacaliuc} % Your name
+\date{\normalsize\today} % Today's date or a custom date
+((* print '\n' *))
+
+((*- if nb.metadata["latex_metadata"]: -*))
+((*- if nb.metadata["latex_metadata"]["title"]: -*))
+\title{	
+    \normalfont \normalsize 
+    \textsc{rice university} \\ [25pt] % Your university, school and/or department name(s)
+    \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+    \huge ((( nb.metadata["latex_metadata"]["title"] ))) \\ % The assignment title
+    \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+((*- endif *))
+((*- else -*))
+\title{	
+    \normalfont \normalsize 
+    \textsc{rice university} \\ [25pt] % Your university, school and/or department name(s)
+    \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+    \huge ((( resources.metadata.name | ascii_only | escape_latex ))) \\ % The assignment title
+    \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+((*- endif *))
+
+
+\maketitle
+
+((* endblock maketitle *))
+
+%===============================================================================
+% Input
+%===============================================================================
+
+((* block input scoped *))
+((* endblock input *))
+
+%===============================================================================
+% Output
+%===============================================================================
+
+((* block execute_result scoped *))
+    ((*- for type in output.data | filter_data_type -*))
+        ((*- if resources.global_content_filter.include_output_prompt -*))
+            ((*- if type in ['text/plain'] *))
+((( add_prompt(output.data['text/plain'] | escape_latex, cell, 'Out', 'ricegray') )))
+            ((* else -*))
+\texttt{\color{ricegray}Out[{\color{ricegray}((( cell.execution_count )))}]:}((( super() )))
+            ((*- endif -*))
+        ((*- endif -*))
+    ((*- endfor -*))
+((* endblock execute_result *))
